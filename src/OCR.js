@@ -37,7 +37,7 @@ export default class OCR extends Component{
             file,
             1280,
             720,
-            "JPEG",
+            "PNG",
             100,
             0,
             (uri) => {
@@ -95,16 +95,21 @@ export default class OCR extends Component{
                                     <h2>Take Picture</h2>
                                 </CardHeader>
                                 <CardBody>
-                                    <Webcam
-                                        ref={this.webcamRef}
-                                        audio={false}
-                                        height={720}
-                                        screenshotFormat="image/jpeg"
-                                        width={1280}
-                                        videoConstraints={{
-                                            facingMode: this.state.faceMode
-                                        }}
-                                    />
+                                    <Row>
+                                        <Col>
+                                            <Webcam
+                                                className="col-12"
+                                                ref={this.webcamRef}
+                                                audio={false}
+                                                height={720}
+                                                screenshotFormat="image/jpeg"
+                                                width={1280}
+                                                videoConstraints={{
+                                                    facingMode: this.state.faceMode
+                                                }}
+                                            />
+                                        </Col>
+                                    </Row>
                                 </CardBody>
                                 <CardFooter>
                                     <Row>
