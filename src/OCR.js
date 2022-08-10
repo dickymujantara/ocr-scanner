@@ -2,6 +2,8 @@ import React, {Component} from "react";
 import Webcam from "react-webcam";
 import Resizer from "react-image-file-resizer";
 import Tesseract from 'tesseract.js';
+const FACING_MODE_USER = "user";
+const FACING_MODE_ENVIRONMENT = "environment";
 
 export default class OCR extends Component{
 
@@ -12,8 +14,13 @@ export default class OCR extends Component{
             captureImage : null,
             resizeImage : null,
             resultText : null,
+            faceMode : FACING_MODE_USER,
             arrText : []
         }
+    }
+
+    switchCamera = () => {
+        this.setState({faceMode : this.state.faceMode !== FACING_MODE_USER ? FACING_MODE_USER : FACING_MODE_ENVIRONMENT})
     }
 
     capturePhoto = () => {
@@ -80,14 +87,20 @@ export default class OCR extends Component{
     render(){
         return(
             <div>
+                <div>
                 <Webcam
                     ref={this.webcamRef}
                     audio={false}
                     height={720}
                     screenshotFormat="image/jpeg"
                     width={1280}
+                    videoConstraints={{
+                        facingMode: this.state.faceMode
+                    }}
                 />
+                <button onClick={() => this.switchCamera()}>Switch Camera</button>
                 <button onClick={() => this.capturePhoto()}>Capture Photo</button>
+                </div>
                 
                 <div>
                     <h1>Before</h1>
