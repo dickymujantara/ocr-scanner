@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import Webcam from "react-webcam";
 import Resizer from "react-image-file-resizer";
-import Tesseract from 'tesseract.js';
+import Tesseract from 'tesseract.js'
 import { Row, Col, Card, CardHeader, CardBody, CardFooter, Button } from "reactstrap";
 
 const FACING_MODE_USER = "user";
@@ -14,6 +14,7 @@ export default class OCR extends Component{
         this.webcamRef = React.createRef()
         this.state = {
             resizeImage : null,
+            upscaleImage : null,
             resultText : null,
             faceMode : FACING_MODE_USER,
             arrText : []
@@ -27,12 +28,10 @@ export default class OCR extends Component{
     capturePhoto = () => {
         const image = this.webcamRef.current.getScreenshot()
         this.imageResizer(image)
-        console.log(image);
     }
 
     imageResizer = (image) => {
-        const file = this.dataURLtoFile(image,"image.jpeg") 
-        console.log(file);
+        const file = this.dataURLtoFile(image,"image.jpeg")
         Resizer.imageFileResizer(
             file,
             1280,
@@ -41,7 +40,6 @@ export default class OCR extends Component{
             100,
             0,
             (uri) => {
-              console.log(uri);
               this.setState({ resizeImage: uri });
             },
             "base64",
@@ -65,7 +63,7 @@ export default class OCR extends Component{
     textRecog = (image) => {
         Tesseract.recognize(
             image,
-            'ind',
+            'eng',
             { logger: m => console.log(m) }
         ).then(({ data: { text } }) => {
             console.log(text);
@@ -103,8 +101,12 @@ export default class OCR extends Component{
                                                 audio={false}
                                                 height={720}
                                                 screenshotFormat="image/jpeg"
+                                                screenshotQuality={1}
+                                                forceScreenshotSourceSize={true}
                                                 width={1280}
                                                 videoConstraints={{
+                                                    height:720,
+                                                    width:1280,
                                                     facingMode: this.state.faceMode
                                                 }}
                                             />
@@ -125,51 +127,60 @@ export default class OCR extends Component{
                     </Row>
                 </Col>
                 
-                <Col className="mt-3" xs="12">
-                    <Row>
-                        <Col xs="1"></Col>
-                        <Col className="text-center" xs="10">
-                            <Card>
-                                <CardHeader>
-                                    <h2>Result Image</h2>
-                                </CardHeader>
-                                <CardBody>
-                                    <Row>
-                                        <Col>
-                                            <img src={this.state.resizeImage}/>
-                                        </Col>
-                                    </Row>
-                                    {
-                                        this.state.arrText.length > 0 
-                                        ? <Row>
-                                            <Col>
-                                                <h6>Raw Text</h6>
-                                                <span>{this.state.resultText}</span>
-                                                <h6>Convert to Array:</h6>
-                                                {
-                                                    this.state.arrText.map(e => {
-                                                        return(
-                                                            <p>{e}</p>
-                                                        )
-                                                    })
-                                                }
-                                            </Col>
-                                        </Row>
-                                        : <></>
-                                    }
-                                </CardBody>
-                                <CardFooter>
-                                    <Row>
-                                        <Col>
-                                            <Button className="mx-2" color="primary" onClick={() => this.photoScan()}>Scan Photo</Button>
-                                        </Col>
-                                    </Row>
-                                </CardFooter>
-                            </Card>
+                {
+                    this.state.resizeImage !== null
+                    ?   <Col className="mt-3" xs="12">
+                            <Row>
+                                <Col xs="1"></Col>
+                                <Col className="text-center" xs="10">
+                                    <Card>
+                                        <CardHeader>
+                                            <h2>Result Image</h2>
+                                        </CardHeader>
+                                        <CardBody>
+                                            <Row>
+                                                <Col>
+                                                    <img src={this.state.resizeImage}/>
+                                                </Col>
+                                            </Row>
+                                            <Row>
+                                                <Col>
+                                                    <img src={this.state.upscaleImage}/>
+                                                </Col>
+                                            </Row>
+                                            {
+                                                this.state.arrText.length > 0 
+                                                ? <Row>
+                                                    <Col className="text-start">
+                                                        <h6>Raw Text</h6>
+                                                        <span>{this.state.resultText}</span>
+                                                        <h6 className="mt-2">Convert to Array:</h6>
+                                                        {
+                                                            this.state.arrText.map(e => {
+                                                                return(
+                                                                    <p key={e}>{e}</p>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Col>
+                                                </Row>
+                                                : <></>
+                                            }
+                                        </CardBody>
+                                        <CardFooter>
+                                            <Row>
+                                                <Col>
+                                                    <Button className="mx-2" color="primary" onClick={() => this.photoScan()}>Scan Photo</Button>
+                                                </Col>
+                                            </Row>
+                                        </CardFooter>
+                                    </Card>
+                                </Col>
+                                <Col xs="1"></Col>
+                            </Row>
                         </Col>
-                        <Col xs="1"></Col>
-                    </Row>
-                </Col>
+                    : <></>
+                }
             </Row>
         )
     }
