@@ -54,7 +54,8 @@ export default class OCR extends Component{
                 let map = this.mappingFrontDoc(clearText)
                 this.setState({frontResultText : map})
             }else{
-                this.setState({backResultText : clearText})
+                let map = this.mappingBackDoc(clearText)
+                this.setState({backResultText : map})
             }
             this.setState({isLoading : false})
             return text
@@ -62,7 +63,7 @@ export default class OCR extends Component{
     }
 
     clearingText(text){
-        const clearText = text.replace(/[@*%".§:;{}())|\\~!=,'`#‘<>?&”]/g,"")
+        const clearText = text.replace(/[@*%".§:;{}())|\\~!=,'`‘<>?&”]/g,"")
         const splitText = clearText.split(["\n"])
 
         if (splitText[0] != "REPUBLIC OF SINGAPORE") {
@@ -107,6 +108,16 @@ export default class OCR extends Component{
         }
     }
 
+    mappingBackDoc(arrText){
+        return {
+            nationality : arrText[2],
+            address: `${arrText[6]} ${arrText[7]} ${arrText[8]}`,
+            streetName : arrText[6],
+            unitNumber : arrText[7],
+            postalCode : arrText[8].split(" ")[1]
+        }
+    }
+
     render(){
         return(
             <Row>
@@ -146,7 +157,11 @@ export default class OCR extends Component{
                                                 this.state.backResultText !== null && !this.state.isLoading
                                                 ?   <>
                                                         <h5>Result :</h5>
-                                                        <p>{this.state.backResultText}</p>
+                                                        <p>Nationality : {this.state.backResultText.nationality}</p>
+                                                        <p>Address : {this.state.backResultText.address}</p>
+                                                        <p>Street Name : {this.state.backResultText.streetName}</p>
+                                                        <p>Unit Number : {this.state.backResultText.unitNumber}</p>
+                                                        <p>Postal Code : {this.state.backResultText.postalCode}</p>
                                                     </>
                                                 : <></>
                                             }
