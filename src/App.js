@@ -14,6 +14,11 @@ export default class App extends Component{
   render(){
     return(
       <>
+        <Row className="text-center my-3">
+          <Col>
+            <h1>OCR SCANNER</h1>
+          </Col>
+        </Row>
         {
           this.state.ocrType !== null
           ?
