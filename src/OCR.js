@@ -18,27 +18,20 @@ export default class OCR extends Component{
     }
 
     uploadPhoto = (image,type) => {
-        Resizer.imageFileResizer(
-            image,
-            1280,
-            720,
-            "PNG",
-            100,
-            0,
-            (uri) => {
+        // Resizer.imageFile`
                 if (type === "front") {
-                    this.setState({ frontDocImg: uri });
+                    this.setState({ frontDocImg: image });
                 }else{
-                    this.setState({ backDocImg: uri });
+                    this.setState({ backDocImg: image });
                 }
-            },
-            "base64",
-        );
+        //     },
+        //     "base64",
+        // );
     }
 
     scanDoc = () => {
         this.textRecog(this.state.frontDocImg,"front")
-        this.textRecog(this.state.backDocImg,"back")
+        // this.textRecog(this.state.backDocImg,"back")
     }
 
     textRecog = (image,type) => {
@@ -48,6 +41,7 @@ export default class OCR extends Component{
             'eng',
             // { logger: m => console.log(m) }
         ).then(({ data: { text } }) => {
+            console.log(text)
             const clearText = this.clearingText(text)
             console.log(clearText);
             if (type === "front") {

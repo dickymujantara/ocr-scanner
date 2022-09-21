@@ -7,7 +7,7 @@ export default class App extends Component{
   constructor(){
     super()
     this.state = {
-      ocrType : null
+      ocrType : "upload"
     }
   }
 
@@ -31,12 +31,12 @@ export default class App extends Component{
             </>
           : <></>
         }
-        <Row className="text-center my-5">
+        {/* <Row className="text-center my-5">
           <Col>
             <Button color="primary" className="mx-2" onClick={() => this.setState({ocrType : "upload"})}>Upload Photo</Button>
             <Button color="primary" onClick={() => this.setState({ocrType : "take"})}>Take Photo</Button>
           </Col>
-        </Row>
+        </Row> */}
       </>
     )
   }
